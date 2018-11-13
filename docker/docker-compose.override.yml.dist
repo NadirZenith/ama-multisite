@@ -1,0 +1,16 @@
+version: "3.1"
+services:
+
+    db:
+      ports:
+        - "3306:3306"
+      volumes:
+          - ./volume/db/dump:/docker-entrypoint-initdb.d
+
+    webserver:
+      ports:
+          - "80:80"
+
+#    fpm:
+#      volumes:
+#          - ./php-fpm/php-ini-overrides.ini:/usr/local/etc/php/99-overrides.ini

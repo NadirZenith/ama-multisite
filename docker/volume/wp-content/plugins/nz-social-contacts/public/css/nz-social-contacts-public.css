@@ -1,0 +1,100 @@
+/*@import 'social-colors';*/
+/*
+<div class="social">
+    <a href="#" class="bg-color-brand"><i class="fa fa-phone"></i></a>
+    <p>123-456-6789</p>
+</div>
+*/
+
+.bg-color-brand{
+    background-color: #333;
+}
+.bg-color-facebook{
+    background-color: #3b5998;
+}
+.bg-color-twitter{
+    background-color:#55acee;
+}
+.bg-color-instagram{
+    background-color: #3f729b;
+}
+
+#nz-socials{
+    position: relative;
+    text-align:center;
+}
+#nz-socials .social{
+    position: relative;
+
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 30px;    
+}
+#nz-socials .social a{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    text-align: center;
+    border-radius: 50%;
+    color:#fff;
+
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+
+}
+
+#nz-socials .social a i{
+    margin-top: 15px;
+
+}
+
+#nz-socials .social a:hover{
+    text-decoration: none;
+
+}
+#nz-socials .social div{
+    position: absolute;
+    left: 50%;
+    top: 100%;
+}
+#nz-socials .social div p{
+    white-space: nowrap;
+    position: relative; 
+    left: -50%; 
+    font-size: 14px;
+
+}
+
+
+/*sm ≥ 768px Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+
+    #nz-socials .social{
+        width: auto;
+        margin-left: 70px;
+        margin-right: 70px;
+
+
+    }
+    #nz-socials .social a{
+        display: block;
+        float: left;
+        width: 60px;
+        height: 60px;
+        font-size: 25px;
+
+    }
+    #nz-socials .social a i{
+        margin-top: 18px;
+    }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) { }
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+}

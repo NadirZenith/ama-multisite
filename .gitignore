@@ -1,0 +1,24 @@
+.idea/
+docker/.env
+docker/docker-compose.yml
+docker/docker-compose.override.yml
+*.log
+
+wp/wp-content
+
+docker/volume/db/mysql
+docker/volume/wp-content/aiowps_backups
+
+# paid/versioned plugins
+docker/volume/wp-content/plugins/revslider
+docker/volume/wp-content/plugins/agni-fortun-plugin
+docker/volume/wp-content/plugins/js_composer
+
+# paid/versioned themes
+docker/volume/wp-content/themes/fortun
+docker/volume/wp-content/themes/amagency
+docker/volume/wp-content/themes/miguelsilva
+docker/volume/wp-content/themes/arbolagency
+
+docker/volume/wp-content/uploads/*
+!docker/volume/wp-content/uploads/.gitkeep

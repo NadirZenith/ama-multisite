@@ -1,0 +1,11 @@
+#contacts-fields-items{
+
+}
+#contacts-fields-items .contacts-list .contact-item{
+    margin: 5px;
+}
+
+.contacts-list .contact-item div{
+    display: inline-block;
+    width: 200px;
+}
