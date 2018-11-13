@@ -7,7 +7,7 @@ class AIOWPSecurity_General_Init_Tasks
 {
     function __construct(){
         global $aio_wp_security;
-
+        
         if ($aio_wp_security->configs->get_value('aiowps_disable_xmlrpc_pingback_methods') == '1') {
             add_filter( 'xmlrpc_methods', array(&$this, 'aiowps_disable_xmlrpc_pingback_methods') );
             add_filter( 'wp_headers', array(&$this, 'aiowps_remove_x_pingback_header') );
@@ -32,23 +32,23 @@ class AIOWPSecurity_General_Init_Tasks
         add_action('admin_notices', array(&$this,'reapply_htaccess_rules_notice'));
         if(isset($_REQUEST['aiowps_reapply_htaccess'])){
             if(strip_tags($_REQUEST['aiowps_reapply_htaccess']) == 1){
-                include_once('wp-security-installer.php');
+                include_once ('wp-security-installer.php');
                 if(AIOWPSecurity_Installer::reactivation_tasks()){
 		    $aio_wp_security->debug_logger->log_debug("The AIOWPS .htaccess rules were successfully re-inserted!");
-		    $_SESSION['reapply_htaccess_rules_action_result'] = '1';//Success indicator.
+		    $_SESSION['reapply_htaccess_rules_action_result'] = '1';//Success indicator. 
 		    //Can't echo to the screen here. It will create an header already sent error.
                 }else{
 		    $aio_wp_security->debug_logger->log_debug("AIOWPS encountered an error when trying to write to your .htaccess file. Please check the logs.", 5);
 		    $_SESSION['reapply_htaccess_rules_action_result'] = '2';//fail indicator.
 		    //Can't echo to the screen here. It will create an header already sent error.
                 }
-
+                
             }elseif(strip_tags($_REQUEST['aiowps_reapply_htaccess']) == 2){
                 //Don't re-write the rules and just delete the temp config item
                 delete_option('aiowps_temp_configs');
             }
         }
-
+        
         if($aio_wp_security->configs->get_value('aiowps_prevent_site_display_inside_frame') == '1'){
             send_frame_options_header(); //send X-Frame-Options: SAMEORIGIN in HTTP header
         }
@@ -58,7 +58,7 @@ class AIOWPSecurity_General_Init_Tasks
             add_filter('style_loader_src', array(&$this,'remove_wp_css_js_meta_info'));
             add_filter('script_loader_src', array(&$this,'remove_wp_css_js_meta_info'));
         }
-
+        
         //For the cookie based brute force prevention feature
         if($aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention') == 1){
             $bfcf_secret_word = $aio_wp_security->configs->get_value('aiowps_brute_force_secret_word');
@@ -68,25 +68,25 @@ class AIOWPSecurity_General_Init_Tasks
                 AIOWPSecurity_Utility::redirect_to_url(AIOWPSEC_WP_URL."/wp-admin");
             }
         }
-
+        
         //Stop users enumeration feature
         if( $aio_wp_security->configs->get_value('aiowps_prevent_users_enumeration') == 1) {
             include_once(AIO_WP_SECURITY_PATH.'/other-includes/wp-security-stop-users-enumeration.php');
         }
-
+        
         //REST API security
         if( $aio_wp_security->configs->get_value('aiowps_disallow_unauthorized_rest_requests') == 1) {
             add_action('rest_api_init', array(&$this, 'check_rest_api_requests'), 10 ,1);
         }
-
+        
         //For user unlock request feature
         if(isset($_POST['aiowps_unlock_request']) || isset($_POST['aiowps_wp_submit_unlock_request'])){
-            nocache_headers();
+            nocache_headers();            
             remove_action('wp_head','head_addons',7);
             include_once(AIO_WP_SECURITY_PATH.'/other-includes/wp-security-unlock-request.php');
             exit();
         }
-
+        
         if(isset($_GET['aiowps_auth_key'])){
             //If URL contains unlock key in query param then process the request
             $unlock_key = sanitize_text_field($_GET['aiowps_auth_key']);
@@ -102,7 +102,7 @@ class AIOWPSecurity_General_Init_Tasks
                 AIOWPSecurity_Utility::redirect_to_url('http://127.0.0.1');
             }
         }
-
+        
         //For 404 IP lockout feature
         if($aio_wp_security->configs->get_value('aiowps_enable_404_IP_lockout') == '1'){
             if (!is_user_logged_in() || !current_user_can('administrator')) {
@@ -131,7 +131,7 @@ class AIOWPSecurity_General_Init_Tasks
             $woo_captcha_enabled = true;
             add_action('woocommerce_register_form', array(&$this, 'insert_captcha_question_form'));
         }
-
+        
         if($woo_captcha_enabled){
             add_filter('woocommerce_process_login_errors', array(&$this, 'aiowps_validate_woo_login_with_captcha'), 10, 3);
         }
@@ -142,7 +142,7 @@ class AIOWPSecurity_General_Init_Tasks
                 add_action('bbp_theme_before_topic_form_submit_wrapper', array(&$this, 'insert_captcha_question_form'));
             }
         }
-
+        
         //For custom login form captcha feature, ie, when wp_login_form() function is used to generate login form
         if($aio_wp_security->configs->get_value('aiowps_enable_custom_login_captcha') == '1'){
             if (!is_user_logged_in()) {
@@ -156,14 +156,14 @@ class AIOWPSecurity_General_Init_Tasks
                 add_action('login_form', array(&$this, 'insert_honeypot_hidden_field'));
             }
         }
-
+ 
         //For registration honeypot feature
         if($aio_wp_security->configs->get_value('aiowps_enable_registration_honeypot') == '1'){
             if (!is_user_logged_in()) {
                 add_action('register_form', array(&$this, 'insert_honeypot_hidden_field'));
             }
         }
-
+        
         //For lost password captcha feature
         if($aio_wp_security->configs->get_value('aiowps_enable_lost_password_captcha') == '1'){
             if (!is_user_logged_in()) {
@@ -176,7 +176,7 @@ class AIOWPSecurity_General_Init_Tasks
         if($aio_wp_security->configs->get_value('aiowps_enable_manual_registration_approval') == '1'){
             add_filter('wp_login_errors', array(&$this, 'modify_registration_page_messages'),10, 2);
         }
-
+        
         //For registration page captcha feature
         if (AIOWPSecurity_Utility::is_multisite_install()){
             $blog_id = get_current_blog_id();
@@ -186,7 +186,7 @@ class AIOWPSecurity_General_Init_Tasks
                     add_action('signup_extra_fields', array(&$this, 'insert_captcha_question_form_multi'));
                     //add_action('preprocess_signup_form', array(&$this, 'process_signup_form_multi'));
                     add_filter( 'wpmu_validate_user_signup', array(&$this, 'process_signup_form_multi') );
-
+                    
                 }
             }
             restore_current_blog();
@@ -219,38 +219,38 @@ class AIOWPSecurity_General_Init_Tasks
                 }
             }
         }
-
+        
         //For buddypress registration captcha feature
         if($aio_wp_security->configs->get_value('aiowps_enable_bp_register_captcha') == '1'){
             add_action('bp_account_details_fields', array(&$this, 'insert_captcha_question_form'));
             add_action('bp_signup_validate', array(&$this, 'buddy_press_signup_validate_captcha'));
         }
-
-
+        
+        
         //For feature which displays logged in users
         $this->update_logged_in_user_transient();
-
+        
         //For block fake googlebots feature
         if($aio_wp_security->configs->get_value('aiowps_block_fake_googlebots') == '1'){
             include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-bot-protection.php');
             AIOWPSecurity_Fake_Bot_Protection::block_fake_googlebots();
         }
-
+        
         //For 404 event logging
         if($aio_wp_security->configs->get_value('aiowps_enable_404_logging') == '1'){
             add_action('wp_head', array(&$this, 'check_404_event'));
         }
 
         //Add more tasks that need to be executed at init time
-
+        
     }
-
+    
     function aiowps_disable_xmlrpc_pingback_methods( $methods ) {
        unset( $methods['pingback.ping'] );
        unset( $methods['pingback.extensions.getPingbacks'] );
        return $methods;
     }
-
+    
     function aiowps_remove_x_pingback_header( $headers ) {
        unset( $headers['X-Pingback'] );
        return $headers;
@@ -316,7 +316,7 @@ class AIOWPSecurity_General_Init_Tasks
     function remove_standard_wp_meta_widget()
     {
         unregister_widget('WP_Widget_Meta');
-    }
+    }    
 
     function remove_wp_generator_meta_info()
     {
@@ -341,11 +341,11 @@ class AIOWPSecurity_General_Init_Tasks
     function do_404_lockout_tasks(){
         global $aio_wp_security;
         $redirect_url = $aio_wp_security->configs->get_value('aiowps_404_lock_redirect_url'); //This is the redirect URL for blocked users
-
+        
         $visitor_ip = AIOWPSecurity_Utility_IP::get_user_ip_address();
-
+        
         $is_locked = AIOWPSecurity_Utility::check_locked_ip($visitor_ip);
-
+        
         if($is_locked){
             //redirect blocked user to configured URL
             AIOWPSecurity_Utility::redirect_to_url($redirect_url);
@@ -360,7 +360,7 @@ class AIOWPSecurity_General_Init_Tasks
             // get the logged in users list from transients entry
             $logged_in_users = (AIOWPSecurity_Utility::is_multisite_install() ? get_site_transient('users_online') : get_transient('users_online'));
             $current_user = wp_get_current_user();
-            $current_user = $current_user->ID;
+            $current_user = $current_user->ID;  
             $current_time = current_time('timestamp');
 
             $current_user_info = array("user_id" => $current_user, "last_activity" => $current_time, "ip_address" => $current_user_ip); //We will store last activity time and ip address in transient entry
@@ -407,7 +407,7 @@ class AIOWPSecurity_General_Init_Tasks
             }
         }
     }
-
+    
     function insert_captcha_custom_login($cust_html_code, $args)
     {
         global $aio_wp_security;
@@ -415,17 +415,17 @@ class AIOWPSecurity_General_Init_Tasks
         $cap_form .= '<div class="aiowps-captcha-equation"><strong>';
         $maths_question_output = $aio_wp_security->captcha_obj->generate_maths_question();
         $cap_form .= $maths_question_output . '</strong></div></p>';
-
+        
         $cust_html_code .= $cap_form;
         return $cust_html_code;
     }
-
+    
     function insert_captcha_question_form_multi($error)
     {
         global $aio_wp_security;
         $aio_wp_security->captcha_obj->display_captcha_form();
     }
-
+    
     function process_signup_form_multi($result)
     {
         global $aio_wp_security;
@@ -437,12 +437,12 @@ class AIOWPSecurity_General_Init_Tasks
         }
         return $result;
     }
-
+    
     function insert_captcha_question_form(){
         global $aio_wp_security;
-
+        
         if($aio_wp_security->configs->get_value('aiowps_default_recaptcha')) {
-
+            
             // Woocommerce "my account" page needs special consideration, ie,
             // need to display two Google reCaptcha forms on same page (for login and register forms)
             // For this case we use the "explicit" recaptcha display
@@ -457,14 +457,14 @@ class AIOWPSecurity_General_Init_Tasks
                 echo '<div class="g-recaptcha-wrap" style="padding:10px 0 10px 0"><div id="woo_recaptcha_2" class="g-recaptcha" data-sitekey="'.$site_key.'"></div></div>';
                 return;
             }
-
+            
             // For all other forms simply display google recaptcha as per normal
             $aio_wp_security->captcha_obj->display_recaptcha_form();
         } else {
             // display plain maths captcha form
             $aio_wp_security->captcha_obj->display_captcha_form();
         }
-
+        
     }
 
     function insert_honeypot_hidden_field(){
@@ -472,8 +472,8 @@ class AIOWPSecurity_General_Init_Tasks
         $honey_input .= '<input name="aio_special_field" type="text" id="aio_special_field" class="aio_special_field" value="" /></p>';
         echo $honey_input;
     }
-
-    function process_comment_post( $comment )
+    
+    function process_comment_post( $comment ) 
     {
         global $aio_wp_security;
         if (is_user_logged_in()) {
@@ -490,8 +490,8 @@ class AIOWPSecurity_General_Init_Tasks
         if ($comment['comment_type'] != '' && $comment['comment_type'] != 'comment') {
             return $comment;
         }
-
-        $verify_captcha = $aio_wp_security->captcha_obj->maybe_verify_captcha();
+        
+        $verify_captcha = $aio_wp_security->captcha_obj->maybe_verify_captcha(); 
         if($verify_captcha === false) {
             //Wrong answer
             wp_die( __('Error: You entered an incorrect CAPTCHA answer. Please go back and try again.', 'all-in-one-wp-security-and-firewall'));
@@ -499,32 +499,32 @@ class AIOWPSecurity_General_Init_Tasks
             return($comment);
         }
     }
-
-    function process_lost_password_form_post()
+    
+    function process_lost_password_form_post() 
     {
         global $aio_wp_security;
-
+        
         $verify_captcha = $aio_wp_security->captcha_obj->maybe_verify_captcha();
         if ( $verify_captcha === false ) {
             add_filter('allow_password_reset', array(&$this, 'add_lostpassword_captcha_error_msg'));
         }
     }
-
+    
     function add_lostpassword_captcha_error_msg()
     {
         //Insert an error just before the password reset process kicks in
         return new WP_Error('aiowps_captcha_error',__('<strong>ERROR</strong>: Your answer was incorrect - please try again.', 'all-in-one-wp-security-and-firewall'));
     }
-
+    
     function check_404_event()
     {
         if(is_404()){
             //This means a 404 event has occurred - let's log it!
             AIOWPSecurity_Utility::event_logger('404');
         }
-
-    }
-
+        
+    }   
+    
     function buddy_press_signup_validate_captcha($errors)
     {
         global $bp, $aio_wp_security;
@@ -536,7 +536,7 @@ class AIOWPSecurity_General_Init_Tasks
         }
         return;
     }
-
+    
     function aiowps_validate_woo_login_with_captcha( $errors, $username, $password ) {
         global $aio_wp_security;
 
@@ -552,11 +552,11 @@ class AIOWPSecurity_General_Init_Tasks
         if($verify_captcha === false) {
             // wrong answer was entered
             $errors->add('authentication_failed', __('<strong>ERROR</strong>: Your answer was incorrect - please try again.', 'all-in-one-wp-security-and-firewall'));
-        }
+        }        
         return $errors;
-
+        
     }
-
+    
     /**
      * Displays a notice message if the plugin was reactivated after being initially deactivated
      * Gives users option of re-applying the aiowps rules which were deleted from the .htaccess after deactivation.
@@ -567,7 +567,7 @@ class AIOWPSecurity_General_Init_Tasks
             echo '<div class="updated"><p>'.__('Would you like All In One WP Security & Firewall to re-insert the security rules in your .htaccess file which were cleared when you deactivated the plugin?', 'all-in-one-wp-security-and-firewall').'&nbsp;&nbsp;<a href="admin.php?page='.AIOWPSEC_MENU_SLUG_PREFIX.'&aiowps_reapply_htaccess=1" class="button-primary">Yes</a>&nbsp;&nbsp;<a href="admin.php?page='.AIOWPSEC_MENU_SLUG_PREFIX.'&aiowps_reapply_htaccess=2" class="button-primary">No</a></p></div>';
         }
     }
-
+    
     //This is a fix for cases when the password reset URL in the email was not decoding all html entities properly
     function decode_reset_pw_msg($message, $key, $user_login, $user_data)
     {
@@ -575,7 +575,7 @@ class AIOWPSecurity_General_Init_Tasks
         $message = html_entity_decode($message);
         return $message;
     }
-
+    
     function modify_registration_page_messages($errors, $redirect_to)
     {
         if( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] ){
@@ -588,18 +588,18 @@ class AIOWPSecurity_General_Init_Tasks
         }
         return $errors;
     }
-
+    
     /*
      * Re-wrote code which checks for REST API requests
      * Below uses the "rest_api_init" action hook to check for REST requests.
-     * The code will block "unauthorized" requests whilst allowing genuine requests.
+     * The code will block "unauthorized" requests whilst allowing genuine requests. 
      * (P. Petreski June 2018)
      */
     function check_rest_api_requests($rest_server_object){
         $rest_user = wp_get_current_user();
         if(empty($rest_user->ID)){
             $error_message = apply_filters('aiowps_rest_api_error_message', __('You are not authorized to perform this action.', 'disable-wp-rest-api'));
-            wp_die($error_message);
+            wp_die($error_message); 
         }
-    }
+    }    
 }

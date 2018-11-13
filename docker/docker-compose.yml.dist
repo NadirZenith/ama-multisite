@@ -32,6 +32,7 @@ services:
         MYSQL_DATABASE: ${MYSQL_DATABASE}
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        DOMAIN_CURRENT_SITE: ${DOMAIN_CURRENT_SITE}
       volumes:
           - ${APP_PATH}:/application
           - ./volume/wp-content:/application/wp-content
