@@ -1,41 +1,31 @@
 version: "3.1"
 services:
-    # mailhog:
-    #   image: mailhog/mailhog:latest
-    #   container_name: docker-base-mailhog
-    #   ports:
-    #       - "8081:8025"
-
-    mariadb:
+    db:
       image: mariadb:10.1
       container_name: ${COMPOSE_PROJECT_NAME}_db
       working_dir: /application
       volumes:
-        - ./volume/db/dump:/docker-entrypoint-initdb.d
         - ./volume/db/mysql:/var/lib/mysql
       environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         MYSQL_DATABASE: ${MYSQL_DATABASE}
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      ports:
-        - "3306:3306"
 
-    webserver_nginx:
+    webserver:
       image: nginx:alpine
       container_name: ${COMPOSE_PROJECT_NAME}_webserver
       working_dir: /application
       volumes:
-          - ${APP_PATH}:/application
           - ./nginx/nginx.conf:/etc/nginx/nginx.conf
           - ./nginx/server.conf:/etc/nginx/conf.d/server.conf
-          - ./volume/logs/nginx:/var/log/nginx
-      ports:
-          - "80:80"
+          - ./volume/webserver:/var/log/nginx
+          - ${APP_PATH}:/application
+          - ./volume/wp-content:/application/wp-content
 
-    php:
+    fpm:
       build: php-fpm
-      container_name: ${COMPOSE_PROJECT_NAME}_php
+      container_name: ${COMPOSE_PROJECT_NAME}_fpm
       working_dir: /application
       environment:
         MYSQL_HOST: ${COMPOSE_PROJECT_NAME}_db
@@ -44,32 +34,4 @@ services:
         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       volumes:
           - ${APP_PATH}:/application
-#           - ./php-fpm/php-ini-overrides.ini:/usr/local/etc/php/99-overrides.ini
-
-#    webserver:
-##      image: httpd:2.4
-#      build: apache
-#      container_name: ${COMPOSE_PROJECT_NAME}_webserver
-##      working_dir: /application
-#      volumes:
-#          - ${APP_PATH}:/usr/local/apache2/htdocs
-#          - ./volume/logs/apache:/var/log/apache2
-##          - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
-##          - ./apache/server.conf:/usr/local/apache2/conf/extra/server.conf
-#      ports:
-#          - "80:80"
-
-#    php:
-#      build: php-apache
-#      container_name: ${COMPOSE_PROJECT_NAME}_php
-#      working_dir: /application
-#      environment:
-#        MYSQL_HOST: ${COMPOSE_PROJECT_NAME}_db
-#        MYSQL_DATABASE: ${MYSQL_DATABASE}
-#        MYSQL_USER: ${MYSQL_USER}
-#        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-#      volumes:
-#          - ${APP_PATH}:/var/www/html/
-#          - ./php-apache/apache2.conf:/etc/apache2/apache2.conf
-#          - ./php-apache/host.conf:/etc/apache2/sites-enabled/000-default.conf
-##           - ./php-fpm/php-ini-overrides.ini:/usr/local/etc/php/99-overrides.ini
+          - ./volume/wp-content:/application/wp-content

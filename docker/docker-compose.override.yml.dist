@@ -1,5 +1,11 @@
 version: "3.1"
 services:
+    # mailhog:
+    #   container_name: ${COMPOSE_PROJECT_NAME}_mailer
+    #   image: mailhog/mailhog:latest
+    #   container_name: docker-base-mailhog
+    #   ports:
+    #       - "8081:8025"
 
     db:
       ports:
