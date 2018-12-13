@@ -9,6 +9,9 @@ wp/wp-content
 docker/volume/db/mysql
 docker/volume/wp-content/aiowps_backups
 
+# languages are downloaded from admin
+docker/volume/wp-content/languages
+
 # paid/versioned plugins
 docker/volume/wp-content/plugins/revslider
 docker/volume/wp-content/plugins/agni-fortun-plugin

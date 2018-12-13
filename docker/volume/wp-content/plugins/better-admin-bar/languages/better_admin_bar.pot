@@ -1,0 +1,46 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Better Admin Bar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-08 15:47+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.2.0; wp-5.0"
+
+#. Name of the plugin
+#. Description of the plugin
+#: better-admin-bar.php:94 better-admin-bar.php:95 better-admin-bar.php:111
+msgid "Better Admin Bar"
+msgstr ""
+
+#: better-admin-bar.php:118
+msgid "Hide admin bar for all users"
+msgstr ""
+
+#: better-admin-bar.php:126
+msgid "Hide admin bar for all users except admin"
+msgstr ""
+
+#: better-admin-bar.php:134
+msgid "Admin bar opacity (inactive):"
+msgstr ""
+
+#: better-admin-bar.php:142
+msgid "Admin bar opacity on hover (active):"
+msgstr ""
+
+#: better-admin-bar.php:150
+msgid "Auto-hide admin bar (show on hover)"
+msgstr ""
+
+#: better-admin-bar.php:158
+msgid "Top hover area height (if autohide):"
+msgstr ""
