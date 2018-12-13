@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Plugins - Polylang - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2018-08-15 12:04:06+0000\n"
+"PO-Revision-Date: 2018-11-18 11:46:58+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1538,10 +1538,6 @@ msgstr "Campos personalizados"
 msgid "Comment status"
 msgstr "Estado de los comentarios"
 
-#: modules/sync/settings-sync.php:95
-msgid "Ping status"
-msgstr "Estados de los pings"
-
 #: modules/sync/settings-sync.php:96
 msgid "Sticky posts"
 msgstr "Entradas fijas"
@@ -1937,3 +1933,7 @@ msgstr "Ejemplo:%1$s en vez de %2$s"
 #: settings/view-about.php:15
 msgid "Polylang is provided with an extensive %1$sdocumentation%2$s (in English only). It includes information on how to set up your multilingual site and use it on a daily basis, a FAQ, as well as a documentation for developers to adapt their plugins and themes."
 msgstr "Polylang se distribuye con una extensa %1$sdocumentación%2$s (sólo en inglés). Se incluye información de cómo crear tu sitio multiidoma y cómo usarlo en el día a día, una página de preguntas frecuentes, así como información para que los programadores puedan adaptar sus plugins y temas."
+
+#: modules/sync/settings-sync.php:95
+msgid "Ping status"
+msgstr "Estado de los pings"
