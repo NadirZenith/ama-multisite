@@ -33,6 +33,7 @@ services:
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         DOMAIN_CURRENT_SITE: ${DOMAIN_CURRENT_SITE}
+        DEBUG: ${DEBUG}
       volumes:
           - ${APP_PATH}:/application
           - ./volume/wp-content:/application/wp-content
